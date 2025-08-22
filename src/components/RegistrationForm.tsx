@@ -1,4 +1,4 @@
-import { Formik, Form, Field, ErrorMessage } from 'formik'
+import { Formik, Form, Field, type FieldProps } from 'formik'
 import { Button, Spinner } from 'react-bootstrap'
 import { object, ref, string } from 'yup'
 
@@ -11,10 +11,12 @@ const validationSchema = object({
   email: string().email('Invalid email').required('Email is required')
 })
 
+const initialValues = { username: '', password: '', confirmPassword: '', email: '' }
+
 const RegistrationForm = () => {
 
   return (
-    <Formik initialValues={{ username: '', password: '', confirmPassword: '', email: '' }}
+    <Formik initialValues={initialValues}
       onSubmit={(values, { setSubmitting }) => {
         setTimeout(() => {
           console.log(JSON.stringify(values, null, 2))
@@ -23,30 +25,110 @@ const RegistrationForm = () => {
       }}
       validationSchema={validationSchema}
     >
-      {({ isSubmitting }) => (
+      {({ isSubmitting, errors, touched }) => (
         <Form>
           <div className="mb-3">
             <label htmlFor="username">Username</label>
-            <Field type="text" name="username" className="form-control" placeholder="Enter your username" />
-            <ErrorMessage name="username" component="div" className="text-danger" />
+            <Field name="username">
+              {({ field }: FieldProps) => (
+                <>
+                  <input
+                    {...field}
+                    type="text"
+                    placeholder="Enter your username"
+                    className={`form-control ${touched.username && errors.username
+                      ? 'is-invalid'
+                      : touched.username && !errors.username
+                        ? 'is-valid'
+                        : ''
+                      }`}
+                  />
+                  {touched.username && errors.username ? (
+                    <div className="invalid-feedback">{errors.username}</div>
+                  ) : touched.username && !errors.username ? (
+                    <div className="valid-feedback">Looks good!</div>
+                  ) : null}
+                </>
+              )}
+            </Field>
           </div>
 
           <div className="mb-3">
             <label htmlFor="password">Password</label>
-            <Field type="password" name="password" className="form-control" placeholder="Enter your password" />
-            <ErrorMessage name="password" component="div" className="text-danger" />
+            <Field name="password">
+              {({ field }: FieldProps) => (
+                <>
+                  <input
+                    {...field}
+                    type="password"
+                    placeholder="Enter your password"
+                    className={`form-control ${touched.password && errors.password
+                      ? 'is-invalid'
+                      : touched.password && !errors.password
+                        ? 'is-valid'
+                        : ''
+                      }`}
+                  />
+                  {touched.password && errors.password ? (
+                    <div className="invalid-feedback">{errors.password}</div>
+                  ) : touched.password && !errors.password ? (
+                    <div className="valid-feedback">Looks good!</div>
+                  ) : null}
+                </>
+              )}
+            </Field>
           </div>
 
           <div className="mb-3">
             <label htmlFor="confirmPassword">Confirm Password</label>
-            <Field type="password" name="confirmPassword" className="form-control" placeholder="Confirm your password" />
-            <ErrorMessage name="confirmPassword" component="div" className="text-danger" />
+            <Field name="confirmPassword">
+              {({ field }: FieldProps) => (
+                <>
+                  <input
+                    {...field}
+                    type="password"
+                    placeholder="Confirm your password"
+                    className={`form-control ${touched.confirmPassword && errors.confirmPassword
+                      ? 'is-invalid'
+                      : touched.confirmPassword && !errors.confirmPassword
+                        ? 'is-valid'
+                        : ''
+                      }`}
+                  />
+                  {touched.confirmPassword && errors.confirmPassword ? (
+                    <div className="invalid-feedback">{errors.confirmPassword}</div>
+                  ) : touched.confirmPassword && !errors.confirmPassword ? (
+                    <div className="valid-feedback">Looks good!</div>
+                  ) : null}
+                </>
+              )}
+            </Field>
           </div>
 
           <div className="mb-3">
             <label htmlFor="email">Email</label>
-            <Field type="email" name="email" className="form-control" placeholder="Enter your email" />
-            <ErrorMessage name="email" component="div" className="text-danger" />
+            <Field name="email">
+              {({ field }: FieldProps) => (
+                <>
+                  <input
+                    {...field}
+                    type="email"
+                    placeholder="Enter your email"
+                    className={`form-control ${touched.email && errors.email
+                      ? 'is-invalid'
+                      : touched.email && !errors.email
+                        ? 'is-valid'
+                        : ''
+                      }`}
+                  />
+                  {touched.email && errors.email ? (
+                    <div className="invalid-feedback">{errors.email}</div>
+                  ) : touched.email && !errors.email ? (
+                    <div className="valid-feedback">Looks good!</div>
+                  ) : null}
+                </>
+              )}
+            </Field>
           </div>
 
           <Button type="submit" variant="danger" disabled={isSubmitting}>
@@ -63,8 +145,9 @@ const RegistrationForm = () => {
           </Button>
 
         </Form>
-      )}
-    </Formik>
+      )
+      }
+    </Formik >
   )
 }
 
