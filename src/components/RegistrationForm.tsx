@@ -1,92 +1,70 @@
-import { useState, type ChangeEvent, type FormEvent } from 'react'
-import { Button, Form } from 'react-bootstrap'
+import { Formik, Form, Field, ErrorMessage } from 'formik'
+import { Button, Spinner } from 'react-bootstrap'
+import { object, ref, string } from 'yup'
 
+const validationSchema = object({
+  username: string().required('Username is required'),
+  password: string().required('Password is required'),
+  confirmPassword: string()
+    .required('Confirmation of the password is required')
+    .oneOf([ref('password')], 'Passwords must match'),
+  email: string().email('Invalid email').required('Email is required')
+})
 
 const RegistrationForm = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [email, setEmail] = useState('')
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    switch (name) {
-      case 'username':
-        setUsername(value)
-        break
-      case 'password':
-        setPassword(value)
-        break
-      case 'confirmPassword':
-        setConfirmPassword(value)
-        break
-      case 'email':
-        setEmail(value)
-        break
-      default:
-        break
-    }
-  }
-
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    if (password !== confirmPassword) {
-      console.log('Password do not match')
-      return
-    }
-    console.log({ username, password, email })
-  }
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <Form.Group className="mb-3" controlId="username">
-        <Form.Label>Username</Form.Label>
-        <Form.Control
-          type="text"
-          name="username"
-          placeholder="Enter your username"
-          value={username}
-          onChange={handleChange}
-        />
-      </Form.Group>
+    <Formik initialValues={{ username: '', password: '', confirmPassword: '', email: '' }}
+      onSubmit={(values, { setSubmitting }) => {
+        setTimeout(() => {
+          console.log(JSON.stringify(values, null, 2))
+          setSubmitting(false)
+        }, 1500)
+      }}
+      validationSchema={validationSchema}
+    >
+      {({ isSubmitting }) => (
+        <Form>
+          <div className="mb-3">
+            <label htmlFor="username">Username</label>
+            <Field type="text" name="username" className="form-control" placeholder="Enter your username" />
+            <ErrorMessage name="username" component="div" className="text-danger" />
+          </div>
 
-      <Form.Group className="mb-3" controlId="password">
-        <Form.Label>Password</Form.Label>
-        <Form.Control
-          type="password"
-          name="password"
-          placeholder="Enter your password"
-          value={password}
-          onChange={handleChange}
-        />
-      </Form.Group>
+          <div className="mb-3">
+            <label htmlFor="password">Password</label>
+            <Field type="password" name="password" className="form-control" placeholder="Enter your password" />
+            <ErrorMessage name="password" component="div" className="text-danger" />
+          </div>
 
-      <Form.Group className="mb-3" controlId="confirmPassword">
-        <Form.Label>Confirm Password</Form.Label>
-        <Form.Control
-          type="password"
-          name="confirmPassword"
-          placeholder="Confirm your password"
-          value={confirmPassword}
-          onChange={handleChange}
-        />
-      </Form.Group>
+          <div className="mb-3">
+            <label htmlFor="confirmPassword">Confirm Password</label>
+            <Field type="password" name="confirmPassword" className="form-control" placeholder="Confirm your password" />
+            <ErrorMessage name="confirmPassword" component="div" className="text-danger" />
+          </div>
 
-      <Form.Group className="mb-3" controlId="email">
-        <Form.Label>Email</Form.Label>
-        <Form.Control
-          type="email"
-          name="email"
-          placeholder="Enter your email"
-          value={email}
-          onChange={handleChange}
-        />
-      </Form.Group>
+          <div className="mb-3">
+            <label htmlFor="email">Email</label>
+            <Field type="email" name="email" className="form-control" placeholder="Enter your email" />
+            <ErrorMessage name="email" component="div" className="text-danger" />
+          </div>
 
-      <Button type="submit" variant="danger">Submit</Button>
+          <Button type="submit" variant="danger" disabled={isSubmitting}>
+            {isSubmitting ? (
+              <>
+                <Spinner as="span" animation="border" size="sm" role="status"
+                  aria-hidden="true" className="me-2" />
+                <span>Submitting...</span>
+              </>
+            ) : (
+              'Submit'
+            )
+            }
+          </Button>
 
-    </Form>
-
+        </Form>
+      )}
+    </Formik>
   )
 }
 
