@@ -1,6 +1,7 @@
-import { Formik, Form, Field, type FieldProps } from 'formik'
+import { Formik, Form, Field, type FieldProps, ErrorMessage } from 'formik'
 import { Button, Spinner } from 'react-bootstrap'
 import { object, ref, string } from 'yup'
+import SuccessMessage from './SuccessMessage'
 
 const validationSchema = object({
   username: string().required('Username is required'),
@@ -44,9 +45,9 @@ const RegistrationForm = () => {
                       }`}
                   />
                   {touched.username && errors.username ? (
-                    <div className="invalid-feedback">{errors.username}</div>
+                    <ErrorMessage name="username" component="div" className="invalid-feedback" />
                   ) : touched.username && !errors.username ? (
-                    <div className="valid-feedback">Looks good!</div>
+                    <SuccessMessage name="username" />
                   ) : null}
                 </>
               )}
@@ -70,9 +71,9 @@ const RegistrationForm = () => {
                       }`}
                   />
                   {touched.password && errors.password ? (
-                    <div className="invalid-feedback">{errors.password}</div>
+                    <ErrorMessage name="password" component="div" className="invalid-feedback" />
                   ) : touched.password && !errors.password ? (
-                    <div className="valid-feedback">Looks good!</div>
+                    <SuccessMessage name="password" />
                   ) : null}
                 </>
               )}
@@ -96,9 +97,9 @@ const RegistrationForm = () => {
                       }`}
                   />
                   {touched.confirmPassword && errors.confirmPassword ? (
-                    <div className="invalid-feedback">{errors.confirmPassword}</div>
+                    <ErrorMessage name="confirmPassword" component="div" className="invalid-feedback" />
                   ) : touched.confirmPassword && !errors.confirmPassword ? (
-                    <div className="valid-feedback">Looks good!</div>
+                    <SuccessMessage name="confirmPassword" />
                   ) : null}
                 </>
               )}
@@ -122,9 +123,9 @@ const RegistrationForm = () => {
                       }`}
                   />
                   {touched.email && errors.email ? (
-                    <div className="invalid-feedback">{errors.email}</div>
+                    <ErrorMessage name="email" component="div" className="invalid-feedback" />
                   ) : touched.email && !errors.email ? (
-                    <div className="valid-feedback">Looks good!</div>
+                    <SuccessMessage name="email" />
                   ) : null}
                 </>
               )}
