@@ -1,0 +1,19 @@
+import RegistrationForm from "./components/RegistrationForm"
+
+
+const App = () => {
+
+  return (<div>
+    <div className="container">
+      <div className="row">
+        <div className="col-6">
+          <h1 className="my-5">React Bootstrap Form</h1>
+          <RegistrationForm />
+        </div>
+      </div>
+    </div>
+  </div>
+  )
+}
+
+export default App
