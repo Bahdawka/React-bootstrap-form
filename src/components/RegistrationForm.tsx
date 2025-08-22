@@ -1,4 +1,4 @@
-import { Formik, Form, Field, type FieldProps, ErrorMessage } from 'formik'
+import { Formik, Form, Field, type FieldProps, ErrorMessage, type FormikHelpers } from 'formik'
 import { Button, Spinner } from 'react-bootstrap'
 import { object, ref, string } from 'yup'
 import SuccessMessage from './SuccessMessage'
@@ -12,18 +12,27 @@ const validationSchema = object({
   email: string().email('Invalid email').required('Email is required')
 })
 
+type Values = {
+  username: string
+  password: string
+  confirmPassword: string
+  email: string
+}
+
 const initialValues = { username: '', password: '', confirmPassword: '', email: '' }
+
+const handleSubmit = (values: Values, { setSubmitting }: FormikHelpers<Values>) => {
+  setTimeout(() => {
+    console.log(JSON.stringify(values, null, 2))
+    setSubmitting(false)
+  }, 1500)
+}
 
 const RegistrationForm = () => {
 
   return (
     <Formik initialValues={initialValues}
-      onSubmit={(values, { setSubmitting }) => {
-        setTimeout(() => {
-          console.log(JSON.stringify(values, null, 2))
-          setSubmitting(false)
-        }, 1500)
-      }}
+      onSubmit={handleSubmit}
       validationSchema={validationSchema}
     >
       {({ isSubmitting, errors, touched }) => (
