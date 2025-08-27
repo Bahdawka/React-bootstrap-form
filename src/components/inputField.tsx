@@ -1,7 +1,8 @@
 import { type FieldProps, Field, ErrorMessage } from 'formik'
 import type { FormikFieldState } from '../types/FormikFieldState.interface'
 import SuccessMessage from './SuccessMessage'
-import type { ChangeEvent } from 'react'
+import { Form } from 'react-bootstrap'
+import { getFormCotrolClass } from '../helpers/getFormControlClass'
 
 interface InputFieldProps {
   name: string
@@ -14,41 +15,34 @@ interface InputFieldProps {
   readonly?: boolean
 }
 
-const InputField = ({ name, label, type, placeholder, touched, errors }: InputFieldProps) => {
+const InputField = ({ name, label, type, placeholder, touched, errors, disabled, readonly }: InputFieldProps) => {
+  const formControlClass = getFormCotrolClass(touched, errors, name)
   return (
-    <div className="mb-3">
-      <label htmlFor={name}>{label}</label>
+    <Form.Group className="mb-3">
+      <Form.Label htmlFor={name}>{label}</Form.Label>
       <Field name={name}>
-        {({ field, form }: FieldProps) => {
-          const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-            form.setFieldTouched(name, true, false)
-            field.onChange(e)
-          }
-
+        {({ field }: FieldProps) => {
           return (
             <>
-              <input
-                type={type}
+              <Form.Control
                 {...field}
-                onChange={handleChange}
+                id={name}
+                type={type}
                 placeholder={placeholder}
-                className={`form-control ${touched[name] && errors[name]
-                  ? 'is-invalid'
-                  : touched[name] && !errors[name]
-                    ? 'is-valid'
-                    : ''
-                  }`}
+                className={formControlClass}
+                disabled={disabled}
+                readOnly={readonly}
+                isInvalid={!!(touched[name] && errors[name])}
               />
               {touched[name] && errors[name] ? (
                 <ErrorMessage name={name} component="div" className="invalid-feedback" />
-              ) : touched[name] && !errors[name] ? (
-                <SuccessMessage name={name} />
-              ) : null}
+              ) : (<SuccessMessage name={name} touched={touched} errors={errors} />
+              )}
             </>
           )
         }}
       </Field>
-    </div>
+    </Form.Group>
   )
 }
 

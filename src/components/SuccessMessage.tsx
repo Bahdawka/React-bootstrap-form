@@ -1,14 +1,22 @@
-import { Field, type FieldProps } from 'formik'
+import { Form } from 'react-bootstrap'
+import type { FormikFieldState } from '../types/FormikFieldState.interface'
 
+interface SuccessMessageProps {
+  name: string
+  touched: FormikFieldState
+  errors: FormikFieldState
+  successMessage?: string
+}
 
-const SuccessMessage = ({ name }: { name: string }) => {
+const SuccessMessage = ({ name, touched, errors, successMessage = 'Looks good!' }: SuccessMessageProps) => {
+  if (!touched[name] && errors[name]) {
+    return null
+  }
+
   return (
-    <Field name={name}>
-      {({ form: { touched, errors } }: FieldProps) =>
-        touched[name] && !errors[name] ? (
-          <div className="valid-feedback">Looks good!</div>
-        ) : null}
-    </Field>
+    <Form.Text as="div" className="valid-feedback">
+      {successMessage}
+    </Form.Text>
   )
 }
 
